@@ -61,7 +61,7 @@ export const UpdateForm = () => {
     try {
       const response = await axios.post(
         `http://localhost:3001/api/update-data/${id}`,
-        mainFormData
+        { mainFormData, tableData }
       );
 
       if (response.data.message === "Data saved successfully") {

@@ -27,6 +27,21 @@ con.connect((err) => {
 
 // Define a route to handle POST requests for updating employees by ID
 app.post("/api/update-data/:id", (req, res) => {
+  const mainFormData = req.body; // This will contain the main form data
+  const tableData = mainFormData.tableData;
+  // Extract the 'id' parameter from the URL
+  const id = req.params.id; // Access 'id' from URL parameter
+  update_employees(res, mainFormData, tableData, id);
+  return res.status(200).json({ message: "Employee updated successfully" });
+});
+
+// Start the Express.js server
+const port = 3001;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
+function update_employees(res, mainFormData, tableData, id) {
   // Extract data from the request body
   const {
     customer_type,
@@ -41,10 +56,7 @@ app.post("/api/update-data/:id", (req, res) => {
     billing_address,
     location1,
     location2,
-  } = req.body;
-
-  // Extract the 'id' parameter from the URL
-  const id = req.params.id; // Access 'id' from URL parameter
+  } = mainFormData;
 
   // SQL statement to update an employee by 'id'
   const sql = `
@@ -83,18 +95,41 @@ app.post("/api/update-data/:id", (req, res) => {
   ];
 
   // Execute the SQL statement
-  con.query(sql, values, (err, result) => {
+  let empid = con.query(sql, values, (err, result) => {
     if (err) {
-      console.error("Error updating employee:", err);
-      return res.status(500).json({ error: "Error updating employee" });
+      // Handle the error
+      return res.status(500).json({ error: "Error updating extra employee" });
+    } else {
+      // Check if the result object has an insertId property
+      if (result && result.insertId) {
+        const insertedId = result.insertId;
+        console.log(`Inserted row ID: ${insertedId}`);
+        // Now you can use 'insertedId' as needed
+        return insertedId;
+      } else {
+        console.log("No row was inserted or the insertId is not available.");
+      }
     }
-    console.log("Employee updated:", result);
-    return res.status(200).json({ message: "Employee updated successfully" });
   });
-});
 
-// Start the Express.js server
-const port = 3001;
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+  updateTableRecords(res, tableData, empid);
+}
+
+function updateTableRecords(res, tableData, emp_id) {
+  tableData.forEach((element) => {
+    const { name, designation, mobile_no, email, address } = element;
+    const values = [1, name, designation, mobile_no, email, address];
+
+    const sql = `
+INSERT INTO extra_employee_details (employee_id, name, designation, mobile, email, address)
+VALUES (?, ?, ?, ?, ?, ?)`;
+
+    con.query(sql, values, (err, result) => {
+      if (err) {
+        console.error("Error executing SQL:", err);
+        return res.status(500).json({ error: "Error updating employee" });
+      }
+      // Handle the result
+    });
+  });
+}
