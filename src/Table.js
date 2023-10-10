@@ -3,7 +3,7 @@ import React from "react";
 import { useState } from "react";
 
 const Table = ({ data, handleMainInputChange }) => {
-  const [editMode, setEditMode] = useState("");
+  const [editMode, setEditMode] = useState(new Array(data.length).fill(false));
 
   // Function to toggle edit mode for a specific row
   const toggleEditMode = (index) => {
@@ -63,6 +63,7 @@ const Table = ({ data, handleMainInputChange }) => {
                       {editMode[index] ? (
                         <input
                           type="text"
+                          id={`name_${index}`} // Unique ID for name input
                           value={item.name}
                           onChange={(e) => handleMainInputChange(e, index)}
                         />
@@ -75,6 +76,7 @@ const Table = ({ data, handleMainInputChange }) => {
                     {editMode[index] ? (
                       <input
                         type="text"
+                        id={`designation_${index}`} // Unique ID for designation input
                         value={item.designation}
                         onChange={(e) => handleMainInputChange(e, index)}
                       />
@@ -86,6 +88,7 @@ const Table = ({ data, handleMainInputChange }) => {
                     {editMode[index] ? (
                       <input
                         type="text"
+                        id={`mobile_no_${index}`} // Unique ID for mobile number input
                         value={item.mobile_no}
                         onChange={(e) => handleMainInputChange(e, index)}
                       />
@@ -97,6 +100,7 @@ const Table = ({ data, handleMainInputChange }) => {
                     {editMode[index] ? (
                       <input
                         type="text"
+                        id={`email_${index}`} // Unique ID for email input
                         value={item.email}
                         onChange={(e) => handleMainInputChange(e, index)}
                       />
@@ -108,7 +112,8 @@ const Table = ({ data, handleMainInputChange }) => {
                     {editMode[index] ? (
                       <input
                         type="text"
-                        value={item.address}
+                        id={`address_${index}`} // Unique ID for address input
+                        value={`${item.address}_${index}`}
                         onChange={(e) => handleMainInputChange(e, index)}
                       />
                     ) : (

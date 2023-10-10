@@ -119,8 +119,8 @@ export const UpdateForm = () => {
           { mainFormData, tableData }
         );
 
-        if (response.data.message === "Data saved successfully") {
-          console.log("Data saved successfully");
+        if (response.data.message === "Employee updated successfully") {
+          showToast("Data saved successfully");
         }
       } catch (error) {
         showToast("Error saving data:", error);
@@ -342,7 +342,7 @@ export const UpdateForm = () => {
               <textarea
                 id="posting_address"
                 name="posting_address"
-                value={formData.posting_address}
+                value={mainFormData.posting_address}
                 onChange={(event) => {
                   handleAddressChange(event); // Pass the event object
                   handleMainInputChange(event); // Pass the event object
@@ -400,7 +400,7 @@ export const UpdateForm = () => {
               <textarea
                 id="location1"
                 name="location1"
-                value={formData.location1}
+                value={mainFormData.location1}
                 onChange={(event) => {
                   handleLocationChange(event);
                   handleMainInputChange(event);
@@ -449,7 +449,7 @@ export const UpdateForm = () => {
                 htmlFor="name"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
-                <span className="text-danger">*</span> Name
+                Name
               </label>
               <input
                 type="text"
